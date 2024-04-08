@@ -37,16 +37,16 @@ import {
 
 export type HocuspocusProviderConfiguration =
   Required<Pick<CompleteHocuspocusProviderConfiguration, 'name'>>
-    & Partial<CompleteHocuspocusProviderConfiguration> & (
-  Required<Pick<CompleteHocuspocusProviderWebsocketConfiguration, 'url'>> |
-  Required<Pick<CompleteHocuspocusProviderConfiguration, 'websocketProvider'>>
+  & Partial<CompleteHocuspocusProviderConfiguration> & (
+    Required<Pick<CompleteHocuspocusProviderWebsocketConfiguration, 'url'>> |
+    Required<Pick<CompleteHocuspocusProviderConfiguration, 'websocketProvider'>>
   )
 
 export interface CompleteHocuspocusProviderConfiguration {
   /**
   * The identifier/name of your document
   */
-   name: string,
+  name: string,
   /**
    * The actual Y.js document
    */
@@ -216,7 +216,10 @@ export class HocuspocusProvider extends EventEmitter {
     this.awareness?.on('update', this.awarenessUpdateHandler.bind(this))
     this.registerEventListeners()
 
-    if (this.configuration.forceSyncInterval) {
+    if (
+      this.configuration.forceSyncInterval &&
+      typeof this.configuration.forceSyncInterval === 'number'
+    ) {
       this.intervals.forceSync = setInterval(
         this.forceSync.bind(this),
         this.configuration.forceSyncInterval,
